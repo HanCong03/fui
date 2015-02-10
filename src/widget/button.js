@@ -3,31 +3,31 @@
  * 通用按钮构件
  */
 
-define( function ( require ) {
+define(function (require) {
 
-    var $ = require( "base/jquery" ),
-        CONF = require( "base/sysconf" ),
-        buttonTpl = require( "tpl/button" ),
-        Icon = require( "widget/icon" ),
-        Label = require( "widget/label" );
+    var $ = require("base/jquery"),
+        CONF = require("base/sysconf"),
+        buttonTpl = require("tpl/button"),
+        Icon = require("widget/icon"),
+        Label = require("widget/label");
 
-    return require( "base/utils" ).createClass( "Button", {
+    return require("base/utils").createClass("Button", {
 
-        base: require( "widget/widget" ),
+        base: require("widget/widget"),
 
-        constructor: function ( options ) {
+        constructor: function (options) {
 
             var defaultOptions = {
                 label: null,
                 text: null,
-                icon: null,
+                icon: {},
                 // label相对icon的位置
                 layout: 'right'
             };
 
-            options = $.extend( {}, defaultOptions, options );
+            options = $.extend({}, defaultOptions, options);
 
-            this.callBase( options );
+            this.callBase(options);
 
         },
 
@@ -35,47 +35,35 @@ define( function ( require ) {
             return this.__labelWidget.getText();
         },
 
-        setLabel: function ( text ) {
-            return this.__labelWidget.setText( text );
+        setLabel: function (text) {
+            return this.__labelWidget.setText(text);
         },
 
-        getLabelWidget: function() {
+        getLabelWidget: function () {
             return this.__labelWidget;
         },
 
-        getIconWidget: function() {
-            return this.__iconWidget;
+        getIconWidget: function () {
+            return this.__iconWidgets;
         },
 
         __render: function () {
 
             this.callBase();
 
-            this.__iconWidget = new Icon( this.__options.icon );
-            this.__labelWidget = new Label( this.__options.label );
+            this.__iconWidgets = [];
+            this.__labelWidget = new Label(this.__options.label);
 
-            // layout
-            switch ( this.__options.layout ) {
-
-                case 'left':
-                /* falls through */
-                case 'top':
-                    this.__element.appendChild( this.__labelWidget.getElement() );
-                    this.__element.appendChild( this.__iconWidget.getElement() );
-                    break;
-
-                case 'right':
-                /* falls through */
-                case 'bottom':
-                /* falls through */
-                default:
-                    this.__element.appendChild( this.__iconWidget.getElement() );
-                    this.__element.appendChild( this.__labelWidget.getElement() );
-                    break;
-
+            if (this.__options.icon) {
+                var icon = this.__options.icon;
+                for (var i = 0, len = icon.length; i < len; i++) {
+                    this.__iconWidgets[i] = new Icon(icon[i]);
+                    this.__element.appendChild(this.__iconWidgets[i].getElement());
+                }
             }
 
-            $( this.__element ).addClass( CONF.classPrefix + "button-layout-"+this.__options.layout );
+            this.__element.appendChild(this.__labelWidget.getElement());
+            $(this.__element).addClass(CONF.classPrefix + "button-layout-" + this.__options.layout);
 
         },
 
@@ -86,35 +74,32 @@ define( function ( require ) {
             this.widgetName = 'Button';
             this.__tpl = buttonTpl;
 
-            this.__iconWidget = null;
+            this.__iconWidgets = null;
             this.__labelWidget = null;
 
-            if ( typeof this.__options.label !== "object" ) {
+            if (typeof this.__options.label !== "object") {
                 this.__options.label = {
                     text: this.__options.label
                 };
             }
 
-            if ( typeof this.__options.icon !== "object" ) {
-                this.__options.icon = {
-                    img: this.__options.icon
-                };
+            if (this.__options.icon && !('length' in this.__options.icon)) {
+                this.__options.icon = [this.__options.icon];
             }
-
         },
 
         __initEvent: function () {
 
             this.callBase();
 
-            this.on( "click", function () {
+            this.on("click", function () {
 
-                this.__trigger( "btnclick" );
+                this.__trigger("btnclick");
 
-            } );
+            });
 
         }
 
-    } );
+    });
 
-} );
+});

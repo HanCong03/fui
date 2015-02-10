@@ -18,7 +18,6 @@ define( function ( require ) {
         base: Panel,
 
         constructor: function ( options ) {
-
             var defaultOptions = {
                 // bed 是Panel的实例
                 bed: {
@@ -34,7 +33,6 @@ define( function ( require ) {
             options = $.extend( {}, defaultOptions, options );
 
             this.callBase( options );
-
         },
 
         show: function () {

@@ -55,6 +55,16 @@ define( function ( require ) {
 
         },
 
+        disable: function () {
+            this.callBase();
+            this.__inputWidget.disable();
+        },
+
+        enable: function () {
+            this.callBase();
+            this.__inputWidget.enable();
+        },
+
         selectRange: function ( start, end ) {
 
             this.__inputWidget.selectRange( start, end );

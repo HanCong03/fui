@@ -3,19 +3,19 @@
  * 可接受输入的下拉菜单构件
  */
 
-define( function ( require ) {
+define(function (require) {
 
-    var $ = require( "base/jquery" ),
-        tpl = require( "tpl/input-menu" ),
-        InputButton = require( "widget/input-button" ),
-        Menu = require( "widget/menu" ),
-        Mask = require( "widget/mask" );
+    var $ = require("base/jquery"),
+        tpl = require("tpl/input-menu"),
+        InputButton = require("widget/input-button"),
+        Menu = require("widget/menu"),
+        Mask = require("widget/mask");
 
-    return require( "base/utils" ).createClass( "InputMenu", {
+    return require("base/utils").createClass("InputMenu", {
 
-        base: require( "widget/widget" ),
+        base: require("widget/widget"),
 
-        constructor: function ( options ) {
+        constructor: function (options) {
 
             var defaultOptions = {
                 input: null,
@@ -24,22 +24,22 @@ define( function ( require ) {
                 selected: -1
             };
 
-            options = $.extend( {}, defaultOptions, options );
+            options = $.extend({}, defaultOptions, options);
 
-            this.callBase( options );
+            this.callBase(options);
 
         },
 
-        select: function ( index ) {
-            this.__menuWidget.select( index );
+        select: function (index) {
+            this.__menuWidget.select(index);
         },
 
-        selectByValue: function ( value ) {
-            return this.__selectBy( "values", value );
+        selectByValue: function (value) {
+            return this.__selectBy("values", value + '');
         },
 
-        selectByLabel: function ( value ) {
-            return this.__selectBy( "labels", value );
+        selectByLabel: function (value) {
+            return this.__selectBy("labels", value);
         },
 
         clearSelect: function () {
@@ -53,7 +53,7 @@ define( function ( require ) {
 
         },
 
-        setValue: function ( value ) {
+        setValue: function (value) {
             return this;
         },
 
@@ -64,44 +64,57 @@ define( function ( require ) {
         open: function () {
             this.__maskWidget.show();
             this.__menuWidget.show();
+            this.addClass("fui-opened");
         },
 
         close: function () {
             this.__maskWidget.hide();
             this.__menuWidget.hide();
+            this.removeClass("fui-opened");
+            this.__inputWidget.unfocus();
+        },
+
+        disable: function () {
+            this.__inputWidget.disable();
+            this.callBase();
+        },
+
+        enable: function () {
+            this.__inputWidget.enable();
+            this.callBase();
         },
 
         __render: function () {
 
-            this.__inputWidget = new InputButton( this.__options.input );
-            this.__menuWidget = new Menu( this.__options.menu );
-            this.__maskWidget = new Mask( this.__options.mask );
+            this.__inputWidget = new InputButton(this.__options.input);
+            this.__menuWidget = new Menu(this.__options.menu);
+            this.__maskWidget = new Mask(this.__options.mask);
 
             this.callBase();
 
-            this.__inputWidget.appendTo( this.__element );
-            this.__menuWidget.positionTo( this.__inputWidget );
+            this.__inputWidget.appendTo(this.__element);
+            this.__menuWidget.positionTo(this.__inputWidget);
 
             this.__initInputValue();
 
         },
 
-        __selectBy: function ( type, value ) {
+        __selectBy: function (type, value) {
 
-            var values = this.__getItemValues()[ type ],
+            var values = this.__getItemValues()[type],
                 index = -1;
 
-            $.each( values, function ( i, val ) {
+            $.each(values, function (i, val) {
 
-                if ( value === val ) {
+                if (value === val) {
                     index = i;
                     return false;
                 }
 
-            } );
+            });
 
-            if ( index !== -1 ) {
-                this.select( index );
+            if (index !== -1) {
+                this.select(index);
                 return this.__menuWidget.getSelectedItem();
             }
 
@@ -111,10 +124,10 @@ define( function ( require ) {
 
         __initInputValue: function () {
 
-            var selectedItem = this.__menuWidget.getItem( this.__options.selected );
+            var selectedItem = this.__menuWidget.getItem(this.__options.selected);
 
-            if ( selectedItem ) {
-                this.__inputWidget.setValue( selectedItem.getLabel() );
+            if (selectedItem) {
+                this.__inputWidget.setValue(selectedItem.getLabel());
             }
 
         },
@@ -125,78 +138,89 @@ define( function ( require ) {
 
             this.callBase();
 
-            this.on( "buttonclick", function () {
+            this.on("buttonclick", function () {
 
-                if ( !this.__menuState ) {
+                if (!this.__menuState) {
                     this.__appendMenu();
                     this.__menuState = true;
                 }
 
-                this.__inputWidget.unfocus();
+                this.__inputWidget.focus();
 
                 this.open();
 
-            } );
+            });
 
-            this.on( "keypress", function ( e ) {
+            this.on("keypress", function (e) {
                 this.__lastTime = new Date();
-            } );
+            });
 
-            this.on( "keyup", function ( e ) {
+            this.on("keyup", function (e) {
 
-                if ( e.keyCode !== 8 && e.keyCode !== 13 && new Date() - this.__lastTime < 500 ) {
+                if (e.keyCode !== 8 && e.keyCode !== 13 && new Date() - this.__lastTime < 500) {
                     this.__update();
                 }
 
-            } );
+            });
 
-            this.on( "inputcomplete", function () {
+            this.on("inputcomplete", function () {
 
-                this.__inputWidget.selectRange( 99999999 );
+                this.__inputWidget.selectRange(99999999);
                 this.__inputComplete();
 
-            } );
+            });
 
-            this.__menuWidget.on( "select", function ( e, info ) {
+            this.__menuWidget.on("select", function (e, info) {
 
                 e.stopPropagation();
 
-                _self.__inputWidget.setValue( info.label );
+                _self.__inputWidget.setValue(info.label);
 
-                _self.trigger( "select", info );
+                _self.trigger("select", info);
 
                 _self.close();
 
-            } );
+            });
 
-            this.__menuWidget.on( "menuitemclick", function ( e, info ) {
-                _self.trigger( "itemclick", info );
-            } );
+            this.__menuWidget.on("menuitemclick", function (e, info) {
+                _self.trigger("itemclick", info);
+            });
 
-            this.__menuWidget.on( "change", function ( e, info ) {
+            this.__menuWidget.on("change", function (e, info) {
 
                 e.stopPropagation();
 
-                _self.trigger( "change", info );
+                _self.trigger("change", info);
 
-            } );
+            });
 
             // 阻止input自身的select和change事件
-            this.__inputWidget.on( "select change", function ( e ) {
+            this.__inputWidget.on("select change", function (e) {
                 e.stopPropagation();
-            } );
+            });
+
+            this.__inputWidget.on("inputfocus", function (e) {
+                e.stopPropagation();
+                if (!_self.__menuState) {
+                    _self.__appendMenu();
+                    _self.__menuState = true;
+                }
+
+                _self.open();
+            });
+
 
             // mask 点击关闭
-            this.__maskWidget.on( "maskclick", function () {
+            this.__maskWidget.on("maskclick", function () {
                 _self.close();
-            } );
+            });
 
             // 记录最后选中的数据
-            this.on( "select", function ( e, info ) {
+            this.on("select", function (e, info) {
 
                 this.__lastSelect = info;
 
-            } );
+            });
 
         },
 
@@ -208,23 +232,23 @@ define( function ( require ) {
                 values = this.__getItemValues().labels,
                 targetValue = null;
 
-            if ( !inputValue ) {
+            if (!inputValue) {
                 return;
             }
 
-            $.each( values, function ( i, val ) {
+            $.each(values, function (i, val) {
 
-                if ( val.toLowerCase().indexOf( lowerCaseValue ) === 0 ) {
+                if (val.toLowerCase().indexOf(lowerCaseValue) === 0) {
                     targetValue = val;
                     return false;
                 }
 
-            } );
+            });
 
-            if ( targetValue ) {
+            if (targetValue) {
 
-                this.__inputWidget.setValue( targetValue );
-                this.__inputWidget.selectRange( inputValue.length );
+                this.__inputWidget.setValue(targetValue);
+                this.__inputWidget.selectRange(inputValue.length);
 
             }
 
@@ -236,12 +260,12 @@ define( function ( require ) {
             var vals = [],
                 labels = [];
 
-            $.each( this.__menuWidget.getWidgets(), function ( index, item ) {
+            $.each(this.__menuWidget.getWidgets(), function (index, item) {
 
-                labels.push( item.getLabel() );
-                vals.push( item.getValue() );
+                labels.push(item.getLabel());
+                vals.push(item.getValue());
 
-            } );
+            });
 
             return {
                 labels: labels,
@@ -259,24 +283,24 @@ define( function ( require ) {
                 inputValue = this.__inputWidget.getValue(),
                 lastSelect = this.__lastSelect;
 
-            $.each( labels, function ( i, label ) {
+            $.each(labels, function (i, label) {
 
-                if ( label === inputValue ) {
+                if (label === inputValue) {
                     targetIndex = i;
                     return false;
                 }
 
-            } );
+            });
 
-            this.trigger( "select", {
+            this.trigger("select", {
                 index: targetIndex,
                 label: inputValue,
-                value: itemsInfo.values[ targetIndex ]
-            } );
+                value: itemsInfo.values[targetIndex]
+            });
 
-            if ( !lastSelect || lastSelect.value !== inputValue ) {
+            if (!lastSelect || lastSelect.value !== inputValue) {
 
-                this.trigger( "change", {
+                this.trigger("change", {
                     from: lastSelect || {
                         index: -1,
                         label: null,
@@ -285,9 +309,9 @@ define( function ( require ) {
                     to: {
                         index: targetIndex,
                         label: inputValue,
-                        value: itemsInfo.values[ targetIndex ]
+                        value: itemsInfo.values[targetIndex]
                     }
-                } );
+                });
 
             }
 
@@ -295,7 +319,7 @@ define( function ( require ) {
 
         __appendMenu: function () {
 
-            this.__menuWidget.appendTo( this.__inputWidget.getElement().ownerDocument.body );
+            this.__menuWidget.appendTo(this.__inputWidget.getElement().ownerDocument.body);
 
         },
 
@@ -317,12 +341,12 @@ define( function ( require ) {
             // menu状态， 记录是否已经append到dom树上
             this.__menuState = false;
 
-            if ( this.__options.selected !== -1 ) {
+            if (this.__options.selected !== -1) {
                 this.__options.menu.selected = this.__options.selected;
             }
 
         }
 
-    } );
+    });
 
-} );
+});

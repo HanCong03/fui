@@ -25,27 +25,19 @@
 
         function initColorPicker () {
 
-            var button = new FUI.Button({
-                    text: '文字颜色',
+            var colorpicker = new FUI.ColorPicker({
                     icon: {
                         img: 'assets/icon-demo/forecolor.png'
                     },
-                    padding: '2px',
-                    layout: 'left'
-                }), colorpicker = new FUI.ColorPicker({
-                    clearText: '清除颜色',
-                    commonText: '通用颜色',
-                    standardText: '标准颜色'
+                    openIcon: {
+                        img: 'assets/icon-demo/forecolor.png'
+                    }
                 });
 
-            button.appendTo( $( "#colorpicker" )[0] );
-            colorpicker.attachTo(button);
+            colorpicker.appendTo($( "#colorpicker" )[0]);
 
-            colorpicker.on('selectcolor', function (e, color){
+            colorpicker.on('select', function (e, color){
                 console.log(color);
-            });
-            setTimeout(function (){
-                button.trigger('click');
             });
         }
 

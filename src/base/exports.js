@@ -7,7 +7,7 @@ define( function ( require ) {
 
     // 配置参数必须最先注册
     FUI_NS.___register( {
-        ALLOW_FOCUS: true
+        ALLOW_FOCUS: false
     } );
 
     FUI_NS.___register( {
@@ -39,7 +39,9 @@ define( function ( require ) {
         Popup: require( "widget/popup" ),
         PopupMenu: require( "widget/popup-menu" ),
         SelectMenu: require( "widget/select-menu" ),
+        Select: require( "widget/select" ),
         Dialog: require( "widget/dialog" ),
+        SubMenu: require( "widget/sub-menu" ),
 
         Utils: require( "base/utils" ),
         Creator: require( "base/creator" )

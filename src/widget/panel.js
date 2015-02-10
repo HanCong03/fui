@@ -2,23 +2,23 @@
  * 容器类： Panel
  */
 
-define( function ( require ) {
+define(function (require) {
 
-    var Utils = require( "base/utils" ),
-        panelTpl = require( "tpl/panel" ),
-        $ = require( "base/jquery" );
+    var Utils = require("base/utils"),
+        panelTpl = require("tpl/panel"),
+        $ = require("base/jquery");
 
-    return Utils.createClass( "Panel", {
+    return Utils.createClass("Panel", {
 
-        base: require( "widget/container" ),
+        base: require("widget/container"),
 
-        constructor: function ( options ) {
+        constructor: function (options) {
 
             var defaultOptions = {};
 
-            options = $.extend( {}, defaultOptions, options );
+            options = $.extend({}, defaultOptions, options);
 
-            this.callBase( options );
+            this.callBase(options);
 
         },
 
@@ -28,11 +28,11 @@ define( function ( require ) {
 
             this.callBase();
 
-            $content = $( '<div class="fui-panel-content"></div>' );
+            $content = $('<div class="fui-panel-content"></div>');
 
-            this.__contentElement.appendChild( $content[ 0 ] );
+            this.__contentElement.appendChild($content[0]);
 
-            this.__contentElement = $content[ 0 ];
+            this.__contentElement = $content[0];
 
         },
 
@@ -45,6 +45,6 @@ define( function ( require ) {
 
         }
 
-    } );
+    });
 
-} );
+});

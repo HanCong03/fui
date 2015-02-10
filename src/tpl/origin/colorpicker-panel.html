@@ -1,0 +1,16 @@
+<div class="fui-colorpicker-panel-content">
+    <div class="fui-clear-color">清除颜色</div>
+    <table>
+        <tbody>
+            colors.forEach (function (colorList){
+                <tr>
+                    colorList.forEach(function (color) {
+                        <td data-value="#{color}">
+                            <div class="fui-color-block" style="background: #{color}"></div>
+                        </td>
+                    });
+                </tr>
+            });
+        </tbody>
+    </table>
+</div>

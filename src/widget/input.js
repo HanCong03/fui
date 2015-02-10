@@ -1,27 +1,27 @@
 /*jshint camelcase:false*/
 /**
-* Input widget
-*/
+ * Input widget
+ */
 
-define( function ( require ) {
+define(function (require) {
 
-    var CONF = require( "base/sysconf" ),
-        $ = require( "base/jquery" ),
-        tpl = require( 'tpl/input' );
+    var CONF = require("base/sysconf"),
+        $ = require("base/jquery"),
+        tpl = require('tpl/input');
 
-    return require( "base/utils" ).createClass( "Input", {
+    return require("base/utils").createClass("Input", {
 
-        base: require( "widget/widget" ),
+        base: require("widget/widget"),
 
-        constructor: function ( options ) {
+        constructor: function (options) {
 
             var defaultOptions = {
                 placeholder: null
             };
 
-            options = $.extend( {}, defaultOptions, options );
+            options = $.extend({}, defaultOptions, options);
 
-            this.callBase( options );
+            this.callBase(options);
 
         },
 
@@ -29,7 +29,7 @@ define( function ( require ) {
             return this.__element.value;
         },
 
-        setValue: function ( value ) {
+        setValue: function (value) {
             this.__element.value = value;
             return this;
         },
@@ -53,17 +53,17 @@ define( function ( require ) {
             this.__element.select();
         },
 
-        selectRange: function ( startIndex, endIndex ) {
+        selectRange: function (startIndex, endIndex) {
 
-            if ( !startIndex ) {
+            if (!startIndex) {
                 startIndex = 0;
             }
 
-            if ( !endIndex ) {
+            if (!endIndex) {
                 endIndex = 1000000000;
             }
 
-            this.__element.setSelectionRange( startIndex, endIndex );
+            this.__element.setSelectionRange(startIndex, endIndex);
 
         },
 
@@ -96,13 +96,13 @@ define( function ( require ) {
 
             this.callBase();
 
-            this.__element.removeAttribute( "unselectable" );
+            this.__element.removeAttribute("unselectable");
 
-            if ( this.__options.placeholder ) {
-                this.__element.setAttribute( "placeholder", this.__options.placeholder );
+            if (this.__options.placeholder) {
+                this.__element.setAttribute("placeholder", this.__options.placeholder);
             }
 
-            this.addClass( CONF.classPrefix + "selectable" );
+            this.addClass(CONF.classPrefix + "selectable");
 
         },
 
@@ -110,18 +110,22 @@ define( function ( require ) {
 
             this.callBase();
 
-            this.on( "keydown", function ( e ) {
+            this.on("keydown", function (e) {
 
-                if ( e.keyCode === 13 ) {
-                    this.trigger( "inputcomplete", {
+                if (e.keyCode === 13) {
+                    this.trigger("inputcomplete", {
                         value: this.getValue()
-                    } );
+                    });
                 }
 
-            } );
+            });
+
+            this.on("focus", function (e) {
+                this.trigger("inputfocus");
+            });
 
         }
 
-    } );
+    });
 
-} );
+});
