@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Flex UI - v1.0.0 - 2015-02-10
+ * Flex UI - v1.0.0 - 2015-02-11
  * https://github.com/fex-team/fui
  * GitHub: https://github.com/fex-team/fui.git 
  * Copyright (c) 2015 Baidu Kity Group; Licensed MIT
@@ -1533,13 +1533,14 @@ _p[38] = {
  */
 _p[39] = {
     value: function(require) {
-        var $ = _p.r(4), Utils = _p.r(13), CONF = _p.r(12), tpl = _p.r(21), Icon = _p.r(43), PPanel = _p.r(55), Mask = _p.r(50), LAYOUT = CONF.layout;
+        var $ = _p.r(4), Utils = _p.r(13), CONF = _p.r(12), tpl = _p.r(21), Icon = _p.r(43), PPanel = _p.r(55), Mask = _p.r(50), Label = _p.r(49), LAYOUT = CONF.layout;
         return Utils.createClass("ColorPicker", {
             base: _p.r(63),
             constructor: function(options) {
                 var defaultOptions = {
                     defaultColor: "#ffffff",
                     columnCount: 10,
+                    label: null,
                     colors: [ "#ffffff", "#000000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2", "#4bacc6", "#f79646", "#f2f2f2", "#808080", "#ddd8c2", "#c6d9f1", "#dbe5f1", "#f2dbdb", "#eaf1dd", "#e5dfec", "#daeef3", "#fde9d9", "#d9d9d9", "#595959", "#c4bc96", "#8db3e2", "#b8cce4", "#e5b8b7", "#d6e3bc", "#ccc0d9", "#b6dde8", "#fbd4b4", "#bfbfbf", "#404040", "#938953", "#548dd4", "#95b3d7", "#d99594", "#c2d69b", "#b2a1c7", "#92cddc", "#fabf8f", "#a6a6a6", "#262626", "#4a442a", "#17365d", "#365f91", "#943634", "#76923c", "#5f497a", "#31849b", "#e36c0a", "#7f7f7f", "#0d0d0d", "#1c1a10", "#0f243e", "#243f60", "#622423", "#4e6128", "#3f3151", "#205867", "#974706" ],
                     layout: LAYOUT.BOTTOM
                 };
@@ -1574,9 +1575,12 @@ _p[39] = {
                 this.__maskWidget = new Mask(this.__options.mask);
                 this.__colorBar = $(".fui-color-bar", this.__element);
                 this.__colorBar.css("background", this.__options.defaultColor);
-                this.__maskWidget.appendTo(this.getElement().ownerDocument.body);
                 this.__element.appendChild(this.__icon.getElement());
                 this.__element.appendChild(this.__openIcon.getElement());
+                if (this.__options.label) {
+                    this.__label = new Label(this.__options.label);
+                    this.__element.appendChild(this.__label.getElement());
+                }
                 this.__panel.getContentElement().innerHTML = Utils.Tpl.compile(_p.r(20), {
                     colors: function() {
                         var data = [];
@@ -2853,6 +2857,7 @@ _p[49] = {
 _p[50] = {
     value: function(require) {
         var Utils = _p.r(13), tpl = _p.r(30), Widget = _p.r(63), $ = _p.r(4), __cache_inited = false, __MASK_CACHE = [];
+        var ZINDEX = 9999;
         return Utils.createClass("Mask", {
             base: _p.r(63),
             constructor: function(options) {
@@ -2884,6 +2889,7 @@ _p[50] = {
                 if (!$.contains(docNode, this.__element)) {
                     this.appendTo(this.__target.ownerDocument.body);
                 }
+                this.setStyle("z-index", this.__getZIndex());
                 this.callBase();
                 this.__position();
                 this.__resize();
@@ -2931,6 +2937,10 @@ _p[50] = {
                         this.trigger("maskclick");
                     }
                 });
+            },
+            __getZIndex: function() {
+                ZINDEX++;
+                return ZINDEX;
             },
             // 定位
             __resize: function() {
@@ -3293,6 +3303,7 @@ _p[54] = {
 _p[55] = {
     value: function(require) {
         var Utils = _p.r(13), CONF = _p.r(12), Widget = _p.r(63), LAYOUT = CONF.layout, $ = _p.r(4);
+        var ZINDEX = 9999;
         return Utils.createClass("PPanel", {
             base: _p.r(52),
             constructor: function(options) {
@@ -3328,6 +3339,7 @@ _p[55] = {
                 if (!this.__options.bound) {
                     this.__options.bound = this.__target.ownerDocument.body;
                 }
+                this.setStyle("z-index", this.__getZIndex());
                 docNode = this.__target.ownerDocument.documentElement;
                 if (!$.contains(docNode, this.__element)) {
                     this.__target.ownerDocument.body.appendChild(this.__element);
@@ -3346,6 +3358,10 @@ _p[55] = {
                 this.__layout = this.__options.layout;
                 // 记录是否已调整过高度
                 this.__height_resized = false;
+            },
+            __getZIndex: function() {
+                ZINDEX += 2;
+                return ZINDEX;
             },
             __render: function() {
                 this.callBase();
@@ -4044,11 +4060,9 @@ _p[60] = {
             __initEvent: function() {
                 this.callBase();
                 var _self = this;
-                //
                 this.button.on("click", function() {
                     _self.open();
                 });
-                //
                 this.mask.on("click", function() {
                     _self.close();
                 });

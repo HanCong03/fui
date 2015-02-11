@@ -76,29 +76,12 @@ define(function (require) {
             this.callBase();
 
             var _self = this;
-            //
             this.button.on("click", function () {
                 _self.open();
             });
-            //
             this.mask.on("click", function () {
                 _self.close();
             });
-            //
-            //this.__widgetMenu.on(this.__options.events.join(" "), function (e) {
-            //    var target = e.target;
-            //
-            //    if (target === _self.__oldContentElement || target === _self.getElement) {
-            //        return;
-            //    }
-            //
-            //    e.stopPropagation();
-            //
-            //    _self.selectByWidget(e.widget);
-            //    _self.hide();
-            //
-            //    return false;
-            //});
 
         },
 
@@ -106,7 +89,6 @@ define(function (require) {
             this.callBase();
 
             this.widgetName = 'SubMenu';
-
 
             this.__tpl = '<div></div>';
             // 被选中的元素

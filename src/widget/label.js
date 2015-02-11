@@ -66,7 +66,6 @@ define( function ( require ) {
             this.__tpl = labelTpl;
 
             this.__options.text = this.__options.text.toString();
-
         }
 
     } );

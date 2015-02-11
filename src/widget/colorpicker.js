@@ -11,6 +11,7 @@ define(function (require) {
         Icon = require("widget/icon"),
         PPanel = require("widget/ppanel"),
         Mask = require("widget/mask"),
+        Label = require("widget/label"),
         LAYOUT = CONF.layout;
 
     return Utils.createClass("ColorPicker", {
@@ -22,6 +23,7 @@ define(function (require) {
             var defaultOptions = {
                 defaultColor: '#ffffff',
                 columnCount: 10,
+                label: null,
                 colors: [
                     '#ffffff', '#000000', '#eeece1', '#1f497d', '#4f81bd',
                     '#c0504d', '#9bbb59', '#8064a2', '#4bacc6', '#f79646',
@@ -83,10 +85,13 @@ define(function (require) {
             this.__colorBar = $('.fui-color-bar', this.__element);
             this.__colorBar.css("background", this.__options.defaultColor);
 
-            this.__maskWidget.appendTo(this.getElement().ownerDocument.body);
-
             this.__element.appendChild(this.__icon.getElement());
             this.__element.appendChild(this.__openIcon.getElement());
+
+            if (this.__options.label) {
+                this.__label = new Label(this.__options.label);
+                this.__element.appendChild(this.__label.getElement());
+            }
 
             this.__panel.getContentElement().innerHTML = Utils.Tpl.compile(require("tpl/colorpicker-panel"), {
                 colors: (function () {

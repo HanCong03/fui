@@ -12,6 +12,8 @@ define( function ( require ) {
         __cache_inited = false,
         __MASK_CACHE = [];
 
+    var ZINDEX = 9999;
+
     return Utils.createClass( "Mask", {
 
         base: require( "widget/widget" ),
@@ -58,6 +60,8 @@ define( function ( require ) {
             if ( !$.contains( docNode, this.__element ) ) {
                 this.appendTo( this.__target.ownerDocument.body );
             }
+
+            this.setStyle('z-index', this.__getZIndex());
 
             this.callBase();
 
@@ -140,6 +144,11 @@ define( function ( require ) {
 
             } );
 
+        },
+
+        __getZIndex: function () {
+            ZINDEX++;
+            return ZINDEX;
         },
 
         // 定位

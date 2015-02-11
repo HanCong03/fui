@@ -11,6 +11,8 @@ define( function ( require ) {
         LAYOUT = CONF.layout,
         $ = require( "base/jquery" );
 
+    var ZINDEX = 9999;
+
     return Utils.createClass( "PPanel", {
 
         base: require( "widget/panel" ),
@@ -62,6 +64,8 @@ define( function ( require ) {
                 this.__options.bound = this.__target.ownerDocument.body;
             }
 
+            this.setStyle('z-index', this.__getZIndex());
+
             docNode = this.__target.ownerDocument.documentElement;
 
             if ( !$.contains( docNode, this.__element ) ) {
@@ -90,6 +94,11 @@ define( function ( require ) {
             // 记录是否已调整过高度
             this.__height_resized = false;
 
+        },
+
+        __getZIndex: function () {
+            ZINDEX += 2;
+            return ZINDEX;
         },
 
         __render: function () {
